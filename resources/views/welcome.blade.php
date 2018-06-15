@@ -5,7 +5,9 @@
         <div class="cover-inner">
             <div class="cover-contents">
                 <h2>あなたが大切にしてきたもの<br>譲りませんか</h2>
-                <a href="" class="btn btn-success btn-lg">Daiki Free Marketを始める</a>
+                @if (!Auth::check())
+                    <a href="{{ route('signup.get') }}" class="btn btn-success btn-lg">Daiki Free Marketを始める</a>
+                @endif
             </div>
         </div>
     </div>
