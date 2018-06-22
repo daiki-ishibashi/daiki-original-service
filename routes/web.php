@@ -22,6 +22,13 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
 Route::group(['middleware' => ['auth']], function () {
      Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
      Route::resource('items', 'ItemsController');
-
+     Route::group(['prefix' => 'users/{id}'], function () {
+          Route::post('favorite', 'ItemFavoritesController@store')->name('item.favorite');
+          Route::delete('unfavorite', 'ItemFavoritesController@destroy')->name('item.unfavorite');
+          Route::post('purchase', 'ItemPurchaseController@store')->name('item.purchase');
+          Route::delete('unpurchase', 'ItemPurchaseController@destroy')->name('item.unpurchase');
+          Route::get('purchases', 'UsersController@purchases')->name('users.purchases');
      // Route::post('/upload', 'ItemsController@upload');
+});
+
 });

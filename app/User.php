@@ -43,15 +43,14 @@ class User extends Authenticatable
     
     public function favorites()
     {
-        return $this->belongsToMany(Item::class, 'item_favorite', 'item_id', 'favorite_id')->withTimestamps();
+        return $this->belongsToMany(Item::class, 'item_favorites', 'user_id' , 'item_id')->withTimestamps();
     }
     
     public function favorite($userId)
-{
+    {
     // 既にフォローしているかの確認
     $exist = $this->is_favoriting($userId);
     // 自分自身ではないかの確認
-    
 
     if ($exist) {
         // 既にフォローしていれば何もしない
@@ -61,26 +60,70 @@ class User extends Authenticatable
         $this->favorites()->attach($userId);
         return true;
     }
-}
-
-public function unfavorite($userId)
-{
-    // 既にフォローしているかの確認
-    $exist = $this->is_favoriting($userId);
-    // 自分自身ではないかの確認
-    
-
-    if ($exist) {
-        // 既にフォローしていればフォローを外す
-        $this->favorites()->detach($userId);
-        return true;
-    } else {
-        // 未フォローであれば何もしない
-        return false;
     }
-}
 
-public function is_favoriting($userId) {
-    return $this->favorites()->where('favorite_id', $userId)->exists();
-}
+    public function unfavorite($userId)
+    {
+        // 既にフォローしているかの確認
+        $exist = $this->is_favoriting($userId);
+        // 自分自身ではないかの確認
+        
+    
+        if ($exist) {
+            // 既にフォローしていればフォローを外す
+            $this->favorites()->detach($userId);
+            return true;
+        } else {
+            // 未フォローであれば何もしない
+            return false;
+        }
+    }
+    
+    public function is_favoriting($userId) {
+        return $this->favorites()->where('item_id', $userId)->exists();
+    }
+    
+    
+    
+    public function purchases()
+    {
+        return $this->belongsToMany(User::class, 'item_purchases', 'item_id', 'purchase_id')->withTimestamps();
+    }
+    
+    public function purchase($purchaseId)
+    {
+        // confirm if already following
+        $exist = $this->is_purchasing($purchaseId);
+        // confirming that it is not you
+    
+        if ($exist) {
+            // do nothing if already following
+            return false;
+        } else {
+            // follow if not following
+            $this->purchases()->attach($purchaseId);
+            return true;
+        }
+    }
+    
+    public function unpurchase($purchaseId)
+    {
+        // confirming if already following
+        $exist = $this->is_purchasing($purchaseId);
+        // confirming that it is not you
+    
+        if ($exist) {
+            // stop following if following
+            $this->purchases()->detach($purchaseId);
+            return true;
+        } else {
+            // do nothing if not following
+            return false;
+        }
+    }
+    
+    
+    public function is_purchasing($purchaseId) {
+        return $this->purchases()->where('purchase_id', $purchaseId)->exists();
+    }
 }

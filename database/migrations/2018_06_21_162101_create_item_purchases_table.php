@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemFavoritesTable extends Migration
+class CreateItemPurchasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateItemFavoritesTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_favorites', function (Blueprint $table) {
+        Schema::create('item_purchases', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
             $table->integer('item_id')->unsigned()->index();
+            $table->integer('purchase_id')->unsigned()->index();
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('purchase_id')->references('id')->on('users')->onDelete('cascade');
             
-            $table->unique(['user_id','item_id']);
+            $table->unique(['item_id', 'purchase_id']);
         });
     }
 
@@ -33,6 +33,6 @@ class CreateItemFavoritesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_favorites');
+        Schema::dropIfExists('item_purchases');
     }
 }

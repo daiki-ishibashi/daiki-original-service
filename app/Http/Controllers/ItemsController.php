@@ -98,11 +98,14 @@ use \App\User;
 
     public function show($id)
         {
+            // $user = User::find($id);
             $item = Item::find($id);
             $items = \DB::table('items')->join('category_masters','items.category_id', '=', 'category_masters.id')->select('category_masters.*')->get();
             
-            if (\Auth::user()->id === $item->user_id){
+            
+            if ($item->user_id){
                 return view('items.show', [
+                    // 'user' => $user,
                     'item' => $item,
                 ]);
             }else {
@@ -126,7 +129,7 @@ use \App\User;
     {
          $this->validate($request, [
             'file' => 'required',
-            'category_master' => 'required',
+            'category_masters' => 'required',
             'name' => 'required',
             'content' => 'required|max:300',
             'price' => 'required|max:99999999999',
@@ -137,7 +140,7 @@ use \App\User;
 
         $item = Item::find($id);
         $item -> image_url = basename($filename);
-        $item -> category_id = $request->category_master;
+        $item -> category_id = $request->category_masters;
         $item -> name = $request->name;
         $item -> content = $request->content;
         $item -> price = $request->price;
@@ -156,4 +159,6 @@ use \App\User;
 
         return redirect("/");
     }
+    
+
  }
