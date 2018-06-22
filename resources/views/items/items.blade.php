@@ -17,7 +17,7 @@
                         {!! nl2br(e($item->price)) !!}円</h2>
                     </div>
                     <div>
-                    @if (Auth::user()->id == $item->user_id)
+                    @if (Auth::check())
                         {!! Form::open(['route' => ['items.destroy', $item->id], 'method' => 'delete']) !!}
                             {!! Form::submit('商品を削除する', ['class' => 'btn btn-danger btn-xs']) !!}
                         {!! Form::close() !!}
